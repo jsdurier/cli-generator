@@ -1,11 +1,12 @@
-import { promises as fsAsync } from 'fs';
+import { fsAsync } from '../utils/fs-async';
 
 import {
 	IFilesTree,
 	writeTree
 } from './files-tree';
 import { firstInstall } from './first-install';
-import { installFromPackageJson } from './install-from-package-json';
+
+const CLI_NAME = 'cli-generator';
 
 const tree: IFilesTree<string> = {
 	'package.json': getPackageJson,
@@ -42,8 +43,15 @@ function getPackageJson(
 `;
 }
 
-function getReadme(): string {
-	return 'this is the readme';
+function getReadme(name: string): string {
+	return `# ${name}
+
+## Install
+
+\`\`\`
+${CLI_NAME} install
+\`\`\`
+`;
 }
 
 // function getPackageJsonFileContent(
