@@ -1,0 +1,26 @@
+{
+  "name": "cli-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "cli-generator": "dist/cli/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run clean && tsc && chmod +x dist/cli/index.js",
+    "clean": "rimraf dist",
+    "debug": "dist/cli/index.js",
+    "build-debug": "pnpm build && pnpm debug"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.17",
+    "@types/sade": "^1.7.4",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "sade": "^1.8.1"
+  }
+}
