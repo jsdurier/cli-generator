@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import sade from 'sade';
-import { generate, installDependencies } from '../tasks';
+
+import {
+	build,
+	generate,
+	installDependencies
+} from '../tasks';
 
 const prog = sade('my-cli');
 
@@ -39,6 +44,14 @@ prog
 		opts
 	) => {
 		installDependencies()
+	});
+
+prog
+	.command('build')
+	.action((
+		opts
+	) => {
+		build()
 	});
 
 prog.parse(process.argv);

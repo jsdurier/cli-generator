@@ -13,7 +13,9 @@ const tree: IFilesTree<string> = {
 	'README.md': getReadme,
 	'.gitignore': '.config',
 	'src': {
-		'index.ts': 'hello'
+		'cli': {
+			'index.ts': getIndex
+		}
 	}
 };
 
@@ -52,6 +54,10 @@ function getReadme(name: string): string {
 ${CLI_NAME} install
 \`\`\`
 `;
+}
+
+function getIndex(): string {
+	return 'console.log(\'hello world\');';
 }
 
 // function getPackageJsonFileContent(

@@ -11,6 +11,7 @@ export function runCommand(command: string): Promise<void> {
 			) => {
 				if (error) {
 					// console.log(`error: ${error.message}`);
+					reject(error);
 					return;
 				}
 				if (stderr) {

@@ -17,7 +17,7 @@ export async function writeTree<T>(
 			fileName
 		);
 		if (typeof value === 'object') {
-			await fsAsync.mkdir(filePath);
+			await createFolderIfNotExist(filePath);
 			await writeTree(
 				filePath,
 				value,
@@ -36,4 +36,10 @@ export async function writeTree<T>(
 			);
 		}
 	}
+}
+
+async function createFolderIfNotExist(folderPath: string): Promise<void> {
+	try {
+		await fsAsync.mkdir(folderPath);
+	} catch (err) { }
 }

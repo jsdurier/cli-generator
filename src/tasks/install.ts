@@ -8,27 +8,25 @@ import {
 	IFilesTree,
 	writeTree
 } from './files-tree';
+import {
+	getDependencies,
+	getDevDependencies
+} from './get-dependencies';
+import { IDependencies } from './i-dependencies';
 
 const CONFIG = '.config';
-const DEPENDENCIES = {
-	"sade": "^1.8.1"
-};
-const DEV_DEPENDENCIES = {
-	"@types/node": "^17.0.17",
-	"@types/sade": "^1.7.4",
-	"rimraf": "^3.0.2"
-};
+const PNPM_LOCK_FILE_NAME = 'pnpm-lock.yaml';
 
-const tree: IFilesTree<IDependencies> = {
+const tree: IFilesTree<IAllDependencies> = {
 	'.config': {
 		// 'tsconfig.json': getTsconfig,
 		'package.json': getPackageJson
 	}
 };
 
-interface IDependencies {
-	dependencies?: { [key: string]: string };
-	devDependencies?: { [key: string]: string };
+interface IAllDependencies {
+	dependencies?: IDependencies;
+	devDependencies?: IDependencies;
 }
 
 /**
@@ -36,7 +34,7 @@ interface IDependencies {
  */
 export async function install(
 	rootDir: string,
-	dependencies: IDependencies = {}
+	dependencies: IAllDependencies = {}
 ): Promise<void> {
 	await writeTree(
 		rootDir,
@@ -50,16 +48,10 @@ export async function install(
 	]);
 }
 
-function getPackageJson(dependencies: IDependencies): string {
+function getPackageJson(dependencies: IAllDependencies): string {
 	const res = {
-		dependencies: mergeDependencies(
-			dependencies.dependencies,
-			DEPENDENCIES
-		),
-		devDependencies: mergeDependencies(
-			dependencies.devDependencies,
-			DEV_DEPENDENCIES
-		)
+		dependencies: getDependencies(dependencies.dependencies),
+		devDependencies: getDevDependencies(dependencies.devDependencies)
 	};
 	return JSON.stringify(
 		res,
@@ -68,43 +60,33 @@ function getPackageJson(dependencies: IDependencies): string {
 	);
 }
 
-function mergeDependencies(
-	value1: unknown | undefined,
-	value2: unknown
-) {
-	return Object.assign(
-		value1 ?? {},
-		value2
-	);
-}
-
-const PNPM_LOCK_FILE_NAME = 'pnpm-lock.yaml';
-
 async function movePnpmLockFile(rootDirPath: string): Promise<void> {
-	const filePath = path.join(
+	return move(
 		rootDirPath,
-		CONFIG,
 		PNPM_LOCK_FILE_NAME
 	);
-	fsAsync.rename(
-		filePath,
-		path.join(
-			rootDirPath,
-			PNPM_LOCK_FILE_NAME
-		)
+}
+
+async function moveNodeModules(rootDirPath: string): Promise<void> {
+	return move(
+		rootDirPath,
+		'node_modules'
 	);
 }
 
-async function moveNodeModules(rootDir: string): Promise<void> {
+async function move(
+	rootDirPath: string,
+	fileName: string
+): Promise<void> {
 	return fsAsync.rename(
 		path.join(
-			rootDir,
+			rootDirPath,
 			CONFIG,
-			'node_modules'
+			fileName
 		),
 		path.join(
-			rootDir,
-			'node_modules'
+			rootDirPath,
+			fileName
 		)
 	);
 }

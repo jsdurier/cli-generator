@@ -1,6 +1,5 @@
-import path from "path";
-import { fsAsync } from "../utils/fs-async";
-import { install } from "./install";
+import { install } from './install';
+import { readPackageJson } from './read-package-json';
 
 /**
  * Install dependencies in package.json at root
@@ -15,17 +14,4 @@ export async function installFromPackageJson(rootDirPath: string): Promise<void>
 		rootDirPath,
 		dependencies
 	);
-}
-
-async function readPackageJson(rootDirPath: string): Promise<any> {
-	const filePath = path.join(
-		rootDirPath,
-		'package.json'
-	);
-	const fileContent = await fsAsync.readFile(
-		filePath,
-		'utf-8'
-	);
-	const parsed = JSON.parse(fileContent);
-	return parsed;
 }
