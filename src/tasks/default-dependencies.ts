@@ -1,6 +1,7 @@
-const DEPENDENCIES = {
+export const DEFAULT_DEPENDENCIES = {
 	"sade": "^1.8.1"
 };
+
 const DEV_DEPENDENCIES = {
 	"@types/node": "^17.0.17",
 	"@types/sade": "^1.7.4",
@@ -8,6 +9,6 @@ const DEV_DEPENDENCIES = {
 };
 
 export const ALL_DEFAULT_DEPENDENCIES = {
-	dependencies: DEPENDENCIES,
+	dependencies: DEFAULT_DEPENDENCIES,
 	devDependencies: DEV_DEPENDENCIES
 };

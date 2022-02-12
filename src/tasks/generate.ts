@@ -9,12 +9,14 @@ const VERSION = '1.0.0';
 
 export async function generate(cliName: string): Promise<void> {
 	await fsAsync.mkdir(cliName);
+	const rootDirPath = getDirName(cliName);
 	const tree = new Tree(
-		cliName,
+		rootDirPath,
 		cliName
 	);
 	await tree.create();
-	await firstInstall();
+	console.log('cli generated');
+	await firstInstall(rootDirPath);
 }
 
 class Tree extends AbstractFolderTreeCreator<string> {
@@ -46,17 +48,21 @@ class Tree extends AbstractFolderTreeCreator<string> {
 	private getReadme(): string {
 		return `# ${this._arg}
 	
-	## Install
-	
-	\`\`\`
-	${CLI_NAME} install
-	\`\`\`
-	`;
+## Install
+
+\`\`\`
+${CLI_NAME} install
+\`\`\`
+`;
 	}
 
 	private getIndex(): string {
-		return 'console.log(\'hello world\');';
+		return 'console.log(\'hello world\');'; // TODO
 	}
+}
+
+function getDirName(cliName: string): string {
+	return cliName;
 }
 
 // function getPackageJsonFileContent(

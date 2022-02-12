@@ -1,77 +1,99 @@
-// const tree: IFilesTree<void> = {
-// 	'.config': {
-// 		'tsconfig.json': getTsconfig
-// 	}
-// };
+import path from 'path';
+
+import { fsAsync } from '../../utils/fs-async';
+import { IFilesTree } from '../../utils/install-dependencies/files-tree';
+import { AbstractFolderTreeCreator } from '../../utils/install-dependencies/folder-tree-creator';
+import { IDependencies } from '../../utils/install-dependencies/i-dependencies';
+import { mergeObjects } from '../../utils/merge-objects';
+import { readPackageJson } from '../../utils/read-package-json';
+import { runCommand } from '../../utils/run-command';
+import { stringify } from '../../utils/stringify';
+import { DEFAULT_DEPENDENCIES } from '../default-dependencies';
+
+const CONFIG = '.config';
+const DIST = 'dist';
+const SRC = 'src';
+const PACKAGE_JSON = 'package.json';
 
 export async function build(): Promise<void> {
-	// TODO
-	// const rootPackageJson = await readPackageJson('');
-	// const appName = rootPackageJson.name;
-	// await writeTree(
-	// 	'',
-	// 	tree,
-	// 	undefined
-	// );
-	// await runCommand(`cd .config && pnpx tsc`);
-	// await addPackageJson(
-	// 	appName,
-	// 	rootPackageJson.dependencies
-	// );
+	const rootPackageJson = await readPackageJson('');
+	const appName = rootPackageJson.name;
+	const tree = new Tree('');
+	await tree.create();
+	await runBuildCommand();
+	await addPackageJson(
+		appName,
+		rootPackageJson.dependencies
+	);
 }
 
-// function getTsconfig(): string {
-// 	return `{
-// 	"compilerOptions": {
-// 		"target": "es5",
-// 		"module": "commonjs",
-// 		"declaration": true,
-// 		"outDir": "../dist",
-// 		"rootDir": "../src",
-// 		"strict": true,
-// 		"esModuleInterop": true,
-// 		"forceConsistentCasingInFileNames": true
-// 	},
-// 	"include": [
-// 		"../src"
-// 	]
-// }
-// `;
-// }
+function runBuildCommand(): Promise<void> {
+	return runCommand(`cd ${CONFIG} && pnpx tsc`);
+}
 
-// async function addPackageJson(
-// 	appName: string,
-// 	dependencies: IDependencies
-// ): Promise<void> {
-// 	return fsAsync.writeFile(
-// 		path.join(
-// 			'dist',
-// 			'package.json'
-// 		),
-// 		getPackageJson(
-// 			appName,
-// 			dependencies
-// 		)
-// 	)
-// }
+class Tree extends AbstractFolderTreeCreator<void> {
+	protected getTreeConfiguration(): IFilesTree<void> {
+		return {
+			[CONFIG]: {
+				'tsconfig.json': () => this.getTsconfig()
+			}
+		};
+	}
 
-// function getPackageJson(
-// 	name: string,
-// 	dependencies: IDependencies
-// ): string {
-// 	const res = {
-// 		"name": name,
-// 		"version": "1.0.0",
-// 		"description": "",
-// 		"main": "index.js",
-// 		"bin": {
-// 			[name]: "cli/index.js"
-// 		},
-// 		"dependencies": getDependencies(dependencies)
-// 	};
-// 	return JSON.stringify(
-// 		res,
-// 		null,
-// 		2
-// 	);
-// }
+	private getTsconfig(): string {
+		return `{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"declaration": true,
+		"outDir": "../${DIST}",
+		"rootDir": "../${SRC}",
+		"strict": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": [
+		"../${SRC}"
+	]
+}
+`;
+	}
+}
+
+async function addPackageJson(
+	appName: string,
+	projectDependencies: IDependencies
+): Promise<void> {
+	return fsAsync.writeFile(
+		path.join(
+			DIST,
+			PACKAGE_JSON
+		),
+		stringify(
+			createPackageJson(
+				appName,
+				projectDependencies
+			)
+		)
+	)
+}
+
+function createPackageJson(
+	name: string,
+	dependencies: IDependencies
+): any {
+	const allDependencies = mergeObjects(
+		dependencies,
+		DEFAULT_DEPENDENCIES
+	);
+	return {
+		"name": name,
+		"version": "1.0.0",
+		"description": "",
+		"main": "index.js",
+		"bin": {
+			[name]: "cli/index.js"
+		},
+		"dependencies": allDependencies
+	};
+}

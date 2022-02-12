@@ -20,6 +20,10 @@ export abstract class AbstractFolderTreeCreator<T> {
 		);
 	}
 
+	protected get dir(): Directory {
+		return new Directory(this._rootDirPath);
+	}
+
 	private async createSubFolder(
 		rootDirPath: string,
 		filesTree: IFilesTree<T>
@@ -35,7 +39,7 @@ export abstract class AbstractFolderTreeCreator<T> {
 					value
 				);
 			} else if (typeof value === 'function') {
-				const fileContent = value(
+				const fileContent = await value(
 					rootDirPath,
 					this._arg
 				);
