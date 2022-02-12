@@ -1,18 +1,10 @@
-import { promises as fsAsync } from 'fs';
-import path from 'path';
+import { install } from '../utils/install-dependencies';
 
-import { runCommand } from '../utils/run-command';
+import { ALL_DEFAULT_DEPENDENCIES } from './default-dependencies';
 
-import {
-	IFilesTree,
-	writeTree
-} from './files-tree';
-import { install } from './install';
-
-
-/**
- * First installation of dependencies
- */
-export async function firstInstall(rootDir: string): Promise<void> {
-	return install(rootDir);
+export async function firstInstall(): Promise<void> {
+	install(
+		'',
+		ALL_DEFAULT_DEPENDENCIES
+	);
 }

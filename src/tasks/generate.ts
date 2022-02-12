@@ -1,41 +1,39 @@
 import { fsAsync } from '../utils/fs-async';
+import { IFilesTree } from '../utils/install-dependencies/files-tree';
+import { AbstractFolderTreeCreator } from '../utils/install-dependencies/folder-tree-creator';
 
-import {
-	IFilesTree,
-	writeTree
-} from './files-tree';
 import { firstInstall } from './first-install';
 
 const CLI_NAME = 'cli-generator';
-
-const tree: IFilesTree<string> = {
-	'package.json': getPackageJson,
-	'README.md': getReadme,
-	'.gitignore': '.config',
-	'src': {
-		'cli': {
-			'index.ts': getIndex
-		}
-	}
-};
+const VERSION = '1.0.0';
 
 export async function generate(cliName: string): Promise<void> {
 	await fsAsync.mkdir(cliName);
-	writeTree(
+	const tree = new Tree(
 		cliName,
-		tree,
 		cliName
 	);
-	await firstInstall(cliName);
+	await tree.create();
+	await firstInstall();
 }
 
-const VERSION = '1.0.0';
+class Tree extends AbstractFolderTreeCreator<string> {
+	protected getTreeConfiguration(): IFilesTree<string> {
+		return {
+			'package.json': () => this.createPackageJson(),
+			'README.md': () => this.getReadme(),
+			'.gitignore': '.config',
+			'src': {
+				'cli': {
+					'index.ts': () => this.getIndex()
+				}
+			}
+		};
+	}
 
-function getPackageJson(
-	name: string
-): string {
-	return `{
-	"name": "${name}",
+	private createPackageJson(): string {
+		return `{
+	"name": "${this._arg}",
 	"version": "${VERSION}",
 	"description": "",
 	"dependencies": {
@@ -43,21 +41,22 @@ function getPackageJson(
 	}
 }
 `;
-}
+	}
 
-function getReadme(name: string): string {
-	return `# ${name}
+	private getReadme(): string {
+		return `# ${this._arg}
+	
+	## Install
+	
+	\`\`\`
+	${CLI_NAME} install
+	\`\`\`
+	`;
+	}
 
-## Install
-
-\`\`\`
-${CLI_NAME} install
-\`\`\`
-`;
-}
-
-function getIndex(): string {
-	return 'console.log(\'hello world\');';
+	private getIndex(): string {
+		return 'console.log(\'hello world\');';
+	}
 }
 
 // function getPackageJsonFileContent(

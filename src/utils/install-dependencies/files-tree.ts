@@ -1,8 +1,13 @@
-import { promises as fsAsync } from 'fs';
+
 import path from 'path';
 
+import { fsAsync } from '../fs-async';
+
 export interface IFilesTree<T> {
-	[fileName: string]: ((arg: T) => string) | IFilesTree<T> | string;
+	[fileName: string]: ((
+		rootDir: string,
+		arg: T
+	) => string) | IFilesTree<T> | string;
 }
 
 export async function writeTree<T>(
@@ -24,7 +29,10 @@ export async function writeTree<T>(
 				arg
 			);
 		} else if (typeof value === 'function') {
-			const fileContent = value(arg);
+			const fileContent = value(
+				rootDirPath,
+				arg
+			);
 			await fsAsync.writeFile(
 				filePath,
 				fileContent
