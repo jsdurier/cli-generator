@@ -58,6 +58,12 @@ ${CLI_NAME} install
 \`\`\`
 ${CLI_NAME} build
 \`\`\`
+
+## Debug
+
+\`\`\`
+${CLI_NAME} debug -- [args]
+\`\`\`
 `;
 	}
 
