@@ -1,5 +1,5 @@
 {
-  "name": "@simplejs/cli-generator",
+  "name": "@jsdurier/cli-generator",
   "version": "1.0.0",
   "description": "generate simple cli",
   "main": "index.js",
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-		"debug": "./dist/cli/index.js"
+		"debug": "ts-node src/cli/index"
   },
   "author": "",
   "license": "ISC",

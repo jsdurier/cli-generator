@@ -3,6 +3,7 @@ import sade from 'sade';
 
 import {
 	build,
+	debug,
 	generate,
 	installDependencies
 } from '../tasks';
@@ -53,5 +54,9 @@ prog
 	) => {
 		build()
 	});
+
+prog
+	.command('debug')
+	.action(debug);
 
 prog.parse(process.argv);

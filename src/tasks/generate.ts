@@ -15,7 +15,6 @@ export async function generate(cliName: string): Promise<void> {
 		cliName
 	);
 	await tree.create();
-	console.log('cli generated');
 	await firstInstall(rootDirPath);
 }
 
