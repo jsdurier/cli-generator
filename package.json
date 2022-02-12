@@ -10,16 +10,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-		"debug": "ts-node src/cli/index"
+    "debug": "ts-node src/cli/index"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.17",
     "@types/sade": "^1.7.4",
     "rimraf": "^3.0.2"
   },
   "dependencies": {
+    "fs-extra": "^10.0.0",
     "sade": "^1.8.1"
   }
 }

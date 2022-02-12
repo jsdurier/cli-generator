@@ -23,7 +23,7 @@ class Tree extends AbstractFolderTreeCreator<string> {
 		return {
 			'package.json': () => this.createPackageJson(),
 			'README.md': () => this.getReadme(),
-			'.gitignore': '.config',
+			'.gitignore': createGitignore(),
 			'src': {
 				'cli': {
 					'index.ts': () => this.getIndex()
@@ -68,20 +68,16 @@ ${CLI_NAME} debug -- [args]
 	}
 
 	private getIndex(): string {
-		return `#!/usr/bin/env node
-import sade from 'sade';
+		return `import sade from 'sade';
 
-const NAME = '${this._arg}';
-const VERSION = '${VERSION}';
-
-sade(NAME)
-	.version(VERSION)
-	.command('example')
-	.describe('Example command')
-	.action(opts => {
-		console.log('run example');
-	})
-	.parse(process.argv);
+export function main(app: sade.Sade): void {
+	app
+		.command('example')
+		.describe('Example command')
+		.action(opts => {
+			console.log('run example');
+		});
+}
 `;
 	}
 }
@@ -91,4 +87,10 @@ sade(NAME)
  */
 function getDirName(cliName: string): string {
 	return cliName;
+}
+
+function createGitignore(): string {
+	return `node_modules	
+.config
+`;
 }

@@ -9,13 +9,14 @@ export function runCommand(command: string): Promise<void> {
 				stdout,
 				stderr
 			) => {
+				// TODO console.log
 				if (error) {
-					// console.log(`error: ${error.message}`);
+					console.log(`error: ${error.message}`);
 					reject(error);
 					return;
 				}
 				if (stderr) {
-					// console.log(`stderr: ${stderr}`);
+					console.log(`stderr: ${stderr}`);
 					return;
 				}
 				// console.log(`stdout: ${stdout}`);
