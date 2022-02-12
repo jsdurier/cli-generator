@@ -8,10 +8,13 @@ import {
 	installDependencies
 } from '../tasks';
 
-const prog = sade('my-cli');
+const NAME = 'cli-generator';
+const VERSION = '1.0.2';
+
+const prog = sade(NAME);
 
 prog
-	.version('1.0.5')
+	.version(VERSION);
 // .option(
 // 	'--global, -g',
 // 	'An example global flag'
