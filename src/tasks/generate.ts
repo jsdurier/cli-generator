@@ -63,41 +63,27 @@ ${CLI_NAME} build
 	}
 
 	private getIndex(): string {
-		return 'console.log(\'hello world\');'; // TODO
+		return `#!/usr/bin/env node
+import sade from 'sade';
+
+const NAME = '${this._arg}';
+const VERSION = '${VERSION}';
+
+sade(NAME)
+	.version(VERSION)
+	.command('example')
+	.describe('Example command')
+	.action(opts => {
+		console.log('run example');
+	})
+	.parse(process.argv);
+`;
 	}
 }
 
+/**
+ * TODO check user input (-, Az, ...)
+ */
 function getDirName(cliName: string): string {
 	return cliName;
 }
-
-// function getPackageJsonFileContent(
-// 	name: string
-// ) {
-// 	return `{
-//   "name": "${name}",
-//   "version": "${VERSION}",
-//   "description": "",
-//   "main": "dist/index.js",
-//   "bin": {
-//     "${name}": "dist/cli/index.js"
-//   },
-//   "scripts": {
-//     "build": "npm run clean && tsc && chmod +x dist/cli/index.js",
-//     "clean": "rimraf dist",
-// 		"debug": "dist/cli/index.js",
-// 		"build-debug": "pnpm build && pnpm debug"
-//   },
-//   "author": "",
-//   "license": "ISC",
-//   "devDependencies": {
-//     "@types/node": "^17.0.17",
-//     "@types/sade": "^1.7.4",
-//     "rimraf": "^3.0.2"
-//   },
-//   "dependencies": {
-//     "sade": "^1.8.1"
-//   }
-// }
-// `
-// };
