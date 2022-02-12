@@ -1,17 +1,16 @@
 {
-  "name": "cli-generator",
+  "name": "@simplejs/cli-generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "generate simple cli",
   "main": "index.js",
   "bin": {
     "cli-generator": "dist/cli/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run clean && tsc && chmod +x dist/cli/index.js",
+    "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "debug": "dist/cli/index.js",
-    "build-debug": "pnpm build && pnpm debug"
+		"debug": "./dist/cli/index.js"
   },
   "author": "",
   "license": "ISC",
