@@ -53,6 +53,12 @@ class Tree extends AbstractFolderTreeCreator<string> {
 \`\`\`
 ${CLI_NAME} install
 \`\`\`
+
+## Build
+
+\`\`\`
+${CLI_NAME} build
+\`\`\`
 `;
 	}
 
